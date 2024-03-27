@@ -8,12 +8,12 @@ def is_inside(position, size):
 
 def observe(position, grid, size):
     vision = set()  # Initialize the vision list
-    
+
     x, y = position
-    
+
     if (grid[x][y] == WALL):
         return list(vision)
-    
+
     flatten = [
         [(-1,0), (-2,0), (-3,0)], # vertical
         [(0,1), (0,2), (0,3)], # horizontal
@@ -37,9 +37,8 @@ def observe(position, grid, size):
                 new_point = (quarter[0] * point[0], quarter[1] * point[1])
                 new_sublist.append(new_point)
             new_flatten.append(new_sublist)
-        
-        
-        # check vertical 
+
+        # check vertical
         flag_v = False
         for i in range(3):
             new_x, new_y = x + new_flatten[0][i][0], y + new_flatten[0][i][1]
@@ -51,7 +50,7 @@ def observe(position, grid, size):
                     flag_v = True
                 del new_flatten[0][i+1:]
                 break
-        
+
         # check horizontal
         flag_h = False
         for i in range(3):
@@ -63,7 +62,7 @@ def observe(position, grid, size):
                     flag_h = True
                 del new_flatten[1][i+1:]
                 break
-                
+
         # check diagonal
         flag_d = False
         for i in range(3):
@@ -73,44 +72,43 @@ def observe(position, grid, size):
             if (grid[new_x][new_y] == WALL):
                 if (i == 0):
                     flag_d = True
-                del new_flatten[2][i+1:]    
-                break    
-    
+                del new_flatten[2][i+1:]
+                break
+
         if flag_d:
             del new_flatten[3][2]
-            del new_flatten[4][2]            
-        
+            del new_flatten[4][2]
+
         if flag_v:
             del new_flatten[3][1]
-            
+
         if flag_h:
             del new_flatten[4][1]
-            
+
         if flag_d and flag_v:
-            del new_flatten[3][:]   
-        
+            del new_flatten[3][:]
+
         if flag_d and flag_h:
             del new_flatten[4][:]
-        
+
         # check VxD
         if (len(new_flatten[3]) > 0):
             new_x, new_y = x + new_flatten[3][0][0], y + new_flatten[3][0][1]
-            if not (is_inside((new_x, new_y), size)):
+            if (is_inside((new_x, new_y), size)):
                 if grid[new_x][new_y] == WALL:
-                    del new_flatten[3][1:] 
-        # check HxD      
+                    del new_flatten[3][1:]
+        # check HxD
         if (len(new_flatten[4]) > 0):
             new_x, new_y = x + new_flatten[4][0][0], y + new_flatten[4][0][1]
             if  (is_inside((new_x, new_y), size)):
                 if grid[new_x][new_y] == WALL:
-                    del new_flatten[4][1:] 
-        
+                    del new_flatten[4][1:]
+
         for sublist in new_flatten:
             for point in sublist:
                 vision.add(point)
 
     return list(vision)
-
 
 
 def printBroad(grid, size):
