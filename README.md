@@ -22,8 +22,7 @@ There are some rules in the game you need to know carefully:
 - The game is over if the seeker catches all hiders (win) or time out (lose). The seeker must touch the hiders if they want to catch them.
 - The agent can observe within a certain range (for simple, in a square with a radius is 3 units). When there are walls/obstacles in this area, they will hide some cells from agents. 
 
-Read more: [CTT303-Project01.pdf]
-(https://courses.ctda.hcmus.edu.vn/pluginfile.php/132976/mod_resource/content/1/CTT303-Project01.pdf)
+Read more: [CTT303-Project01.pdf](https://courses.ctda.hcmus.edu.vn/pluginfile.php/132976/mod_resource/content/1/CTT303-Project01.pdf)
 ### 1. Main functions:
 ```mermaid
 graph LR
