@@ -20,19 +20,7 @@ def colorCell(value):
     if value == VISION:
         return "see", "gray"
 
-class Board:
-    def __init__(self):
-        pass
-
-
-def create_grid(grid, size):
-    # global rows, columns
-    # try:
-    #     rows = int(row_entry.get())
-    #     columns = int(column_entry.get())
-    # except ValueError:
-    #     return
-
+def createGrid(frame, grid, size):
     rows = size[0]
     columns = size[1]
     # Clear previous grid
@@ -46,45 +34,17 @@ def create_grid(grid, size):
             cell = colorCell(grid[row][column])
             tk.Label(frame, text=cell[0].format(row+1, column+1), borderwidth=1, relief='solid', width=9, height=4, bg=cell[1]).grid(row=row, column=column)
 
-root = tk.Tk()
-root.title("Grid Example")
+def createFrontEnd(grid, size):
+    root = tk.Tk()
+    root.title("Grid Example")
 
-# Create a frame to hold the grid
-frame = tk.Frame(root)
-frame.pack(padx=10, pady=10)
+    # Create a frame to hold the grid
+    frame = tk.Frame(root)
+    frame.pack(padx=10, pady=10)
 
-# # Label and entry for row count
-# row_label = tk.Label(root, text="Rows:")
-# row_label.pack()
-# row_entry = tk.Entry(root)
-# row_entry.pack()
+    # Button to create grid
+    create_button = tk.Button(root, text="End", command=root.destroy)
+    create_button.pack()
+    createGrid(frame, grid, size)
 
-# # Label and entry for column count
-# column_label = tk.Label(root, text="Columns:")
-# column_label.pack()
-# column_entry = tk.Entry(root)
-# column_entry.pack()
-
-data = [
-    [0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 3, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0],
-]
-size = 7, 7
-pos = tv2.findSeeker(data, size)
-
-vision = tv2.observe(pos, data, size)
-
-newData = tv2.redrawGrid(data, size, pos, vision)
-
-
-# Button to create grid
-# create_button = tk.Button(root, text="Create Grid", command=create_grid(testGrid, testSize))
-# create_button.pack()
-create_grid(newData, size)
-
-root.mainloop()
+    root.mainloop()
