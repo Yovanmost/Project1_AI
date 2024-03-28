@@ -7,6 +7,7 @@ HIDER = 2
 SEEKER = 3
 PATH = 0
 VISION = 5
+ANNOUNCE = 6
 
 def colorCell(value):
     if value == WALL:
@@ -19,6 +20,8 @@ def colorCell(value):
         return "path", "white"
     if value == VISION:
         return "see", "gray"
+    if value == ANNOUNCE:
+        return "signal", "purple"
 
 def createGrid(frame, grid, size):
     rows = size[0]

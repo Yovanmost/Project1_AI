@@ -7,6 +7,7 @@ WALL = 1
 HIDER = 2
 SEEKER = 3
 PATH = 0
+VISION = 5
 
 class Cell:
     def __init__(self, pos, state, value):
@@ -54,15 +55,18 @@ class Board:
                     print()
                 print(self.grid[i][j], end=" ")
 
-    # update board based on seeker vison(?)
-    def updateBoard(self, listVision):
-        seekerPos = self.seeker.position
-        print(seekerPos)
+    # update board based on seeker/hider vision(?)
+    def updateBoard(self, pos, listVision):
+        # print(pos)
         newGrid = self.grid.copy()
         for k in range(len(listVision)):
-            if not (Agent.is_inside((seekerPos[0] + listVision[k][0], seekerPos[1] + listVision[k][1]), self.size)):
+            if not (Agent.is_inside((pos[0] + listVision[k][0], pos[1] + listVision[k][1]), self.size)):
                 continue
-            if newGrid[seekerPos[0] + listVision[k][0]][seekerPos[1] + listVision[k][1]] == 1:
+            if newGrid[pos[0] + listVision[k][0]][pos[1] + listVision[k][1]] == 1:
                 continue
-            newGrid[seekerPos[0] + listVision[k][0]][seekerPos[1] + listVision[k][1]] = 5
+            newGrid[pos[0] + listVision[k][0]][pos[1] + listVision[k][1]] = 5
         return newGrid
+
+    def addAnnounce(self):
+        pos = self.hider.announce(self.grid)
+        self.grid[pos[0]][pos[1]] = 6
