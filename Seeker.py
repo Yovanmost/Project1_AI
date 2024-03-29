@@ -1,5 +1,6 @@
 from Agent import Agent
 
+WALL = 1
 
 class Seeker(Agent):
     def vision(self, grid):
@@ -101,8 +102,14 @@ class Seeker(Agent):
                     if grid[new_x][new_y] == Agent.WALL:
                         del new_flatten[4][1:]
 
+            ls_vision.add((x, y))
+
             for sublist in new_flatten:
                 for point in sublist:
-                    ls_vision.add(point)
+                    new_x = point[0] + x
+                    new_y = point[1] + y
+                    if not Agent.is_inside((new_x, new_y), size) or grid[new_x][new_y] == WALL:
+                        continue
+                    ls_vision.add((new_x, new_y))
 
         return list(ls_vision)

@@ -162,16 +162,14 @@ def test1():
     obstacles = [((1, 0), (1, 0))] # fix later
     seekerPos = 3, 3
     vision = observe(seekerPos, grid, size)
-    listSeen = updateVision(seekerPos, vision)
-    # updateBoard(grid, size, seekerPos, vision)
-    # fe.createFrontEnd(grid, size)
+    fe.createFrontEnd(grid, size, vision)
 
-    newSeekerPos = 4, 3
-    newVision = observe(newSeekerPos, grid, size)
-    grid[3][3], grid[4][3] = grid[4][3], grid[3][3]
-    a = cal_heuristic(newSeekerPos, grid, size, vision)
-    updateBoard(grid, newVision)
-    fe.createFrontEnd(grid, size)
-    print(a)
+    # newSeekerPos = 4, 3
+    # newVision = observe(newSeekerPos, grid, size)
+    # grid[3][3], grid[4][3] = grid[4][3], grid[3][3]
+    # a = cal_heuristic(newSeekerPos, grid, size, vision)
+    # updateBoard(grid, newVision)
+    # fe.createFrontEnd(grid, size)
+    # print(a)
 
 test1()
