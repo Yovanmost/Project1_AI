@@ -122,15 +122,19 @@ def observe(position, grid, size):
 
     return list(vision)
 
-def cal_heuristic(pos, grid, size, listSeen):
+def cal_new_vision(pos, grid, size, listSeen):
     # find the cell with biggest vision
-    h = 0
+    new_vision  = 0
     listWillSee = observe(pos, grid, size)
     for point in listWillSee:
         x, y = point
         if grid[x][y] != WALL and point not in listSeen:
-            h+=1
-    return h
+            new_vision+=1
+    return new_vision
+
+def cal_heuristic():
+    pass
+
 
 def neighbors8(node, rows, cols):
     row, col = node
@@ -142,40 +146,36 @@ def neighbors8(node, rows, cols):
             new_row, new_col = row + dr, col + dc
             if 0 <= new_row < rows and 0 <= new_col < cols:
                 list_neighbor.append((new_row,new_col))
-    print(node)
-    print(list_neighbor)
     return list_neighbor        
         
 
-def Search(grid, start, size):
+def Search(grid, start, size, has_seen):
     visited = set()
     max_vision = 0
     max_vision_path = []
     
-    has_seen = observe(start, grid, size)
-    
-    heap = [(-len(has_seen), start, [start], set())] # heuristic, node, path, list_seen
+    heap = [(-len(has_seen), start, [start], set())] # value(vision), node, path, list_seen
     
     visited.add(start)
     
     while heap:
-        heuristic, node, path, list_seen = heapq.heappop(heap)
+        value, node, path, list_seen = heapq.heappop(heap)
         
         #update list_seen
         list_seen.update(observe(node, grid, size))
         
         if not path:
-            max_vision = -heuristic
+            max_vision = -value
             max_vision_path = path
-        elif -heuristic > max_vision:
-            max_vision = -heuristic
+        elif -value > max_vision:
+            max_vision = -value
             max_vision_path = path
         
         for new_x, new_y in neighbors8(node, size[0], size[1]):
             if (new_x, new_y) not in visited and grid[new_x][new_y] != WALL:
                 visited.add((new_x, new_y))
-                new_heuristic = len(list_seen) + cal_heuristic((new_x, new_y), grid, size, list_seen)
-                heapq.heappush(heap,( -new_heuristic, (new_x, new_y), path + [(new_x, new_y)], list_seen))
+                new_value = len(list_seen) + cal_new_vision((new_x, new_y), grid, size, list_seen)
+                heapq.heappush(heap,( -new_value, (new_x, new_y), path + [(new_x, new_y)], list_seen))
         
     return max_vision, max_vision_path
 
@@ -200,7 +200,7 @@ def test1():
         ]
 
     seenGrid = grid.copy()
-    value, path = Search(grid, (3,3), (7,7),)
+    value, path = Search(grid, (3,3), (7,7), observe((3,3), grid, size))
     print(value)
     print(path)
 
