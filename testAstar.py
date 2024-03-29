@@ -1,6 +1,7 @@
 WALL = 1
 import frontend as fe
 from Agent import Agent
+import heapq
 
 def is_inside(position, size):
     x, y = position
@@ -51,7 +52,6 @@ def observe(position, grid, size):
             if not (is_inside((new_x, new_y), size)):
                 break
             if (grid[new_x][new_y] == WALL):
-                print(new_x, new_y)
                 if (i == 0):
                     flag_v = True
                 del new_flatten[0][i+1:]
@@ -130,13 +130,55 @@ def cal_heuristic(pos, grid, size, listSeen):
         x, y = point
         if grid[x][y] != WALL and point not in listSeen:
             h+=1
-            print(x, y)
-            print()
     return h
 
+def neighbors8(node, rows, cols):
+    row, col = node
+    list_neighbor = []
+    for dr in [-1, 0, 1]:
+        for dc in [-1, 0, 1]:
+            if dr == 0 and dc == 0:
+                continue
+            new_row, new_col = row + dr, col + dc
+            if 0 <= new_row < rows and 0 <= new_col < cols:
+                list_neighbor.append((new_row,new_col))
+    print(node)
+    print(list_neighbor)
+    return list_neighbor        
+        
 
-def AStar():
-    pass
+def Search(grid, start, size):
+    visited = set()
+    max_vision = 0
+    max_vision_path = []
+    
+    has_seen = observe(start, grid, size)
+    
+    heap = [(-len(has_seen), start, [start], set())] # heuristic, node, path, list_seen
+    
+    visited.add(start)
+    
+    while heap:
+        heuristic, node, path, list_seen = heapq.heappop(heap)
+        
+        #update list_seen
+        list_seen.update(observe(node, grid, size))
+        
+        if not path:
+            max_vision = -heuristic
+            max_vision_path = path
+        elif -heuristic > max_vision:
+            max_vision = -heuristic
+            max_vision_path = path
+        
+        for new_x, new_y in neighbors8(node, size[0], size[1]):
+            if (new_x, new_y) not in visited and grid[new_x][new_y] != WALL:
+                visited.add((new_x, new_y))
+                new_heuristic = len(list_seen) + cal_heuristic((new_x, new_y), grid, size, list_seen)
+                heapq.heappush(heap,( -new_heuristic, (new_x, new_y), path + [(new_x, new_y)], list_seen))
+        
+    return max_vision, max_vision_path
+
 
 def updateBoard(grid, pos, listVision):
         newGrid = grid.copy()
@@ -158,20 +200,8 @@ def test1():
         ]
 
     seenGrid = grid.copy()
-
-    obstacles = [((1, 0), (1, 0))] # fix later
-    seekerPos = 3, 3
-    vision = observe(seekerPos, grid, size)
-    listSeen = updateVision(seekerPos, vision)
-    # updateBoard(grid, size, seekerPos, vision)
-    # fe.createFrontEnd(grid, size)
-
-    newSeekerPos = 4, 3
-    newVision = observe(newSeekerPos, grid, size)
-    grid[3][3], grid[4][3] = grid[4][3], grid[3][3]
-    a = cal_heuristic(newSeekerPos, grid, size, vision)
-    updateBoard(grid, newVision)
-    fe.createFrontEnd(grid, size)
-    print(a)
+    value, path = Search(grid, (3,3), (7,7),)
+    print(value)
+    print(path)
 
 test1()
