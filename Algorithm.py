@@ -155,8 +155,52 @@ def Search(pos_start, grid, size, list_had_seen, visited_times):
 
     return max_vision, max_vision_path
 
-def Search_priority():
-    pass
+def Search_priority(pos_start, grid, size, list_had_seen, visited_times, list_priority):
+    visited = {}
+    max_value = 0
+    max_value_path = [pos_start]
+    min_steps = float("inf")
+    
+    # heap: (vision, cost, position, path, list_seen)
+    heap = [(0, 0, pos_start, max_value_path, list_had_seen)]
+
+    while heap:
+        value, cost, node, path, list_seen = heapq.heappop(heap)
+        
+        # check visited times
+        if node not in visited:
+            pass
+        elif visited[node] >= visited_times:
+            continue
+        # update visited
+        visited[node] = visited.get(node, 0) + 1
+        # update list_seen
+        list_seen.update(observe(node, grid, size))
+        # update max_value, path, min cost
+        if not path:
+            max_value = -value
+            max_value_path = path
+            min_steps = cost
+        elif -value > max_value:
+            max_value = -value
+            max_value_path = path
+            min_steps = cost
+        elif -value == max_value and cost < min_steps:
+            max_value_path = path
+            min_steps = cost
+        
+        # generate neighbor
+        for new_pos in generate_neighbor(node, size):
+            if grid[new_pos[0]][new_pos[1]] == WALL:
+                continue
+            if new_pos not in visited or visited[new_pos] < visited_times:
+                # update new cost, path, value
+                new_cost = cost + 1
+                new_path = path + [new_pos]
+                new_value = -value + cal_heuristic(new_pos, grid, size, list_seen, list_priority)
+                heapq.heappush(heap,(-new_value, new_cost, new_pos, new_path, list_seen))
+
+    return max_value, max_value_path
 
 def test1():
     size = 7, 7
