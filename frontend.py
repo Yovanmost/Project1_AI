@@ -23,6 +23,7 @@ def colorCell(value):
     if value == ANNOUNCE:
         return "signal", "purple"
 
+
 def createGrid(frame, grid, size, listVision, window_size):
     rows = size[0]
     columns = size[1]
@@ -44,6 +45,8 @@ def createGrid(frame, grid, size, listVision, window_size):
         for column in range(columns):
             cell = colorCell(grid[row][column])
             tk.Label(frame, borderwidth=1, relief='solid', width=cell_size // 10, height=cell_size // 15, bg=cell[1]).grid(row=row, column=column)
+
+
 
     # color vision(list)
     for point in listVision:
