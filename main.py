@@ -4,6 +4,7 @@
 import frontend as fe
 import board as bd
 from inputMap import readInputFile
+import Render as rd
 
 def test1():
     size = 7, 7
@@ -45,7 +46,14 @@ def test2():
     N, M, board, obstacle = readInputFile("map1_1.txt")
     testBoard = bd.Board((N, M), board, obstacle)
     testBoard.printBroad()
+    print(testBoard.seeker.position)
     seekerVision = testBoard.seeker.vision(testBoard.grid)
     fe.createFrontEnd(testBoard.grid, testBoard.size, seekerVision)
 
-test2()
+def test3():
+    N, M, board, obstacle = readInputFile("map1_1.txt")
+    testBoard = bd.Board((N, M), board, obstacle)
+    frontEnd = rd.Render(testBoard)
+    frontEnd.render()
+
+test3()
