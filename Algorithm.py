@@ -107,14 +107,14 @@ def cal_new_vision(pos, grid, size, list_had_seen):
     return new_vision
 
 # Hàm tìm đường đi ngắn nhất với tầm nhìn lớn nhất, (1 ô có thể đi "visited_times" lần)
-def Search(pos_start, grid, size, list_had_seen, visited_times):
+def Search(start, grid, size, list_had_seen, visited_times):
     visited = {}
     max_vision = len(list_had_seen)
-    max_vision_path = [pos_start]
+    max_vision_path = [start]
     min_steps = float("inf")
     
     # heap: (vision, cost, position, path, list_seen)
-    heap = [(-max_vision, 0, pos_start, max_vision_path, list_had_seen)]
+    heap = [(-max_vision, 0, start, max_vision_path, list_had_seen)]
 
     while heap:
         value, cost, node, path, list_seen = heapq.heappop(heap)
@@ -155,14 +155,24 @@ def Search(pos_start, grid, size, list_had_seen, visited_times):
 
     return max_vision, max_vision_path
 
-def Search_priority(pos_start, grid, size, list_had_seen, visited_times, list_priority):
+def cal_heuristic(pos, grid, size, list_had_seen, list_priority):
+    heuristic = 0
+    list_new_vision = observe(pos, grid, size)
+    
+    for cell in list_new_vision:
+        x, y = cell
+        if grid[x][y] != WALL and cell not in list_had_seen and cell in list_priority:
+            heuristic += 1
+    return heuristic
+
+def Search_priority(start, grid, size, list_had_seen, visited_times, list_priority):
     visited = {}
     max_value = 0
-    max_value_path = [pos_start]
+    max_value_path = [start]
     min_steps = float("inf")
     
     # heap: (vision, cost, position, path, list_seen)
-    heap = [(0, 0, pos_start, max_value_path, list_had_seen)]
+    heap = [(0, 0, start, max_value_path, list_had_seen)]
 
     while heap:
         value, cost, node, path, list_seen = heapq.heappop(heap)
@@ -202,20 +212,58 @@ def Search_priority(pos_start, grid, size, list_had_seen, visited_times, list_pr
 
     return max_value, max_value_path
 
+def cal_heuristic_diagonal(current, goal):
+    dx = abs(current[0] - goal[0])
+    dy = abs(current[1] - goal[1])
+    
+    D =  1 # length of each node
+    D2 = 1 # diagonal distance  
+    h = D *(dx + dy) + (D2 - 2*D) * min(dx,dy)
+    return h
+
+    
+def Search_shorted_path(start, goal, grid, size):
+    
+    heap = [(0, 0, start,[start])] # (f = g + h, g, node, path)
+    visited = set()
+    
+    while heap:
+        _, cur_g, current, path = heapq.heappop(heap)
+        
+        if current in visited:
+            continue
+        visited.add(current)
+        
+        if current == goal:
+            return path
+        
+        
+        for new_cell in generate_neighbor(current, size):
+            if not is_inside(new_cell, size) or new_cell in visited or grid[new_cell[0]][new_cell[1]] == WALL:
+                continue
+            
+            new_g = cur_g + 1
+            new_h = cal_heuristic_diagonal(current, goal)
+            new_f = new_g + new_h
+            new_path = path + [new_cell]
+            
+            heapq.heappush(heap, (new_f, new_g, new_cell, new_path))
+        
+
 def test1():
     size = 7, 7
     grid = [
             [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 3, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0],
+            [1, 1, 1, 3, 0, 0, 0],
+            [0, 0, 1, 0, 0, 0, 0],
+            [0, 0, 1, 1, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0],
         ]
 
     pos = 3,3 
-    value, path = Search(pos, grid, size, set(), 1)
+    value, path = Search_priority((3,3), grid, size, set(), 1,[(4,1)])
     print(value)
     print(path)
 
