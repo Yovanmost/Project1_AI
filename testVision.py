@@ -21,7 +21,7 @@ class Agent:
         for dir in directions:
             new_i = self.pos[0] + dir[0]
             new_j = self.pos[1] + dir[1]
-            if 0 <= new_i < self.rows and 0 <= new_j < self.cols and :
+            if 0 <= new_i < self.rows and 0 <= new_j < self.cols:
                 pass
         return
 
