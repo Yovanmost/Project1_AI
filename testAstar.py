@@ -125,7 +125,9 @@ def observe(position, grid, size):
     return list(vision)
 
 def cal_new_vision(pos, grid, size, listSeen):
+def cal_new_vision(pos, grid, size, listSeen):
     # find the cell with biggest vision
+    new_vision  = 0
     new_vision  = 0
     listWillSee = observe(pos, grid, size)
     for point in listWillSee:
