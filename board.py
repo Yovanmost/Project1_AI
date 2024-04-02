@@ -26,12 +26,13 @@ class Board:
     # init hider
     def findHider(self):
         hiderPos = 0,0
+        listHider = []
         for i in range(self.size[0]):
             for j in range(self.size[1]):
                 if self.grid[i][j] == HIDER:
                     hiderPos = i, j
-        hider = Hider(hiderPos)
-        return hider
+                    listHider.append(Hider(hiderPos))
+        return listHider
 
     # init seeker
     def findSeeker(self):

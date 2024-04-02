@@ -123,7 +123,9 @@ def observe(position, grid, size):
     return list(vision)
 
 def cal_new_vision(pos, grid, size, listSeen):
+def cal_new_vision(pos, grid, size, listSeen):
     # find the cell with biggest vision
+    new_vision  = 0
     new_vision  = 0
     listWillSee = observe(pos, grid, size)
     for point in listWillSee:
@@ -186,6 +188,43 @@ def updateBoard(grid, pos, listVision):
             newGrid[point[0]][point[1]] = 5
         return newGrid
 
+def Search_2(grid, start, size, has_seen, time_visited):
+    visited = {}  # Use a dictionary instead of a set to keep track of the number of times each cell is visited
+    max_vision = 0
+    max_vision_path = []
+    
+    heap = [(-len(has_seen), start, [start], set())]  # value(vision), node, path, list_seen
+    
+    visited[start] = 1  # Initialize the starting cell with a visit count of 1
+    
+    while heap:
+        value, node, path, list_seen = heapq.heappop(heap)
+        if node not in visited:
+            pass
+        elif visited[node] >= time_visited:
+            continue
+            
+        visited[node] = visited.get(node, 0) + 1
+        # Update list_seen
+        list_seen.update(observe(node, grid, size))
+        
+        if not path:
+            max_vision = -value
+            max_vision_path = path
+        elif -value > max_vision:
+            max_vision = -value
+            max_vision_path = path
+        
+        for new_x, new_y in neighbors8(node, size[0], size[1]):
+            if grid[new_x][new_y] == WALL:
+                continue
+            if (new_x, new_y) not in visited or visited[(new_x, new_y)] < time_visited :
+                print(new_x, new_y)
+                # visited[(new_x, new_y)] = visited.get((new_x, new_y), 0) + 1
+                new_value = len(list_seen) + cal_new_vision((new_x, new_y), grid, size, list_seen)
+                heapq.heappush(heap, (-new_value, (new_x, new_y), path + [(new_x, new_y)], list_seen))
+        
+    return max_vision, max_vision_path
 
 def test1():
     size = 7, 7
@@ -204,4 +243,4 @@ def test1():
     print(value)
     print(path)
 
-test1()
+test2()
