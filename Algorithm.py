@@ -1,5 +1,5 @@
 import heapq
-
+from collections import deque
 class Algorithm:
 
     WALL = 1
@@ -118,6 +118,8 @@ class Algorithm:
         # heap: (vision, cost, position, path, list_seen)
         heap = [(-max_vision, 0, start, max_vision_path, list_had_seen)]
 
+        count = 0
+
         while heap:
             value, cost, node, path, list_seen = heapq.heappop(heap)
             
@@ -150,10 +152,12 @@ class Algorithm:
                     continue
                 if new_pos not in visited or visited[new_pos] < visited_times:
                     # update new cost, path, value
+                    
                     new_cost = cost + 1
                     new_path = path + [new_pos]
                     new_value = len(list_seen) + Algorithm.cal_new_vision(new_pos, grid, size, list_seen)
                     heapq.heappush(heap,(-new_value, new_cost, new_pos, new_path, list_seen.copy()))
+        
 
         return max_vision_path
 
@@ -261,3 +265,51 @@ class Algorithm:
                     continue
                 list.append((new_x, new_y))
         return list
+    
+    def Search_2(start, grid, size, list_had_seen, visited_times):
+        visited = {}
+        max_vision = len(list_had_seen)
+        max_vision_path = [start]
+        min_steps = float("inf")
+        
+        # heap: (vision, cost, position, path, list_seen)
+        queue = deque([(-max_vision, 0, start, max_vision_path, list_had_seen)])
+
+        while queue:
+            value, cost, node, path, list_seen = queue.popleft()
+            
+            # check visited times
+            if node not in visited:
+                pass
+            elif visited[node] >= visited_times:
+                continue
+            # update visited
+            visited[node] = visited.get(node, 0) + 1
+            # update list_seen
+            list_seen.update(Algorithm.observe(node, grid, size))
+            # update max_value, path, min cost
+            if not max_vision_path:
+                max_vision = -value
+                max_vision_path = path
+                min_steps = cost
+            elif -value > max_vision:
+                max_vision = -value
+                max_vision_path = path
+                min_steps = cost
+            elif -value == max_vision and cost < min_steps:
+                max_vision = -value
+                max_vision_path = path
+                min_steps = cost
+            
+            # generate neighbor
+            for new_pos in Algorithm.generate_neighbor(node, size):
+                if grid[new_pos[0]][new_pos[1]] == Algorithm.WALL:
+                    continue
+                if new_pos not in visited or visited[new_pos] < visited_times:
+                    # update new cost, path, value
+                    new_cost = cost + 1
+                    new_path = path + [new_pos]
+                    new_value = len(list_seen) + Algorithm.cal_new_vision(new_pos, grid, size, list_seen)
+                    queue.append((-new_value, new_cost, new_pos, new_path, list_seen.copy()))
+
+        return max_vision_path
