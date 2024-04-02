@@ -131,7 +131,7 @@ class Algorithm:
             # update list_seen
             list_seen.update(Algorithm.observe(node, grid, size))
             # update max_value, path, min cost
-            if not path:
+            if not max_vision_path:
                 max_vision = -value
                 max_vision_path = path
                 min_steps = cost
@@ -140,6 +140,7 @@ class Algorithm:
                 max_vision_path = path
                 min_steps = cost
             elif -value == max_vision and cost < min_steps:
+                max_vision = -value
                 max_vision_path = path
                 min_steps = cost
             
@@ -152,8 +153,7 @@ class Algorithm:
                     new_cost = cost + 1
                     new_path = path + [new_pos]
                     new_value = len(list_seen) + Algorithm.cal_new_vision(new_pos, grid, size, list_seen)
-                    
-                    heapq.heappush(heap,(-new_value, new_cost, new_pos, new_path, list_seen))
+                    heapq.heappush(heap,(-new_value, new_cost, new_pos, new_path, list_seen.copy()))
 
         return max_vision_path
 
@@ -210,7 +210,7 @@ class Algorithm:
                     new_cost = cost + 1
                     new_path = path + [new_pos]
                     new_value = -value + Algorithm.cal_heuristic(new_pos, grid, size, list_seen, list_priority)
-                    heapq.heappush(heap,(-new_value, new_cost, new_pos, new_path, list_seen))
+                    heapq.heappush(heap,(-new_value, new_cost, new_pos, new_path, list_seen.copy()))
 
         return max_value_path
 
@@ -251,3 +251,13 @@ class Algorithm:
                 
                 heapq.heappush(heap, (new_f, new_g, new_cell, new_path))
             
+    def find_list_priority(announce_position, grid, size):
+        list = []
+        x, y = announce_position
+        for dx in range(-3, 4):
+            for dy in range(-3, 4):
+                new_x, new_y = x + dx, y + dy
+                if not Algorithm.is_inside((new_x, new_y), size) or grid[new_x][new_y] == Algorithm.WALL:
+                    continue
+                list.append((new_x, new_y))
+        return list
