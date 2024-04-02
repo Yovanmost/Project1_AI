@@ -14,7 +14,7 @@ class Agent:
     UP_LEFT = 8
 
     def __init__(self, position):
-        self.position = list(position)
+        self.position = position
 
     def move(self, direction):
         directions = [
@@ -31,6 +31,9 @@ class Agent:
         dx, dy = directions[direction]
         self.position[0] += dx
         self.position[1] += dy
+        
+    def move_2(self, new_pos):
+        self.position = new_pos
 
     def vision(self, grid):
         pass
