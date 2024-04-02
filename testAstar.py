@@ -2,8 +2,6 @@ WALL = 1
 import frontend as fe
 from Agent import Agent
 import heapq
-from inputMap import readInputFile
-import board as bd
 
 def is_inside(position, size):
     x, y = position
@@ -155,24 +153,16 @@ def neighbors8(node, rows, cols):
 
 def Search(grid, start, size, has_seen):
     visited = set()
+    max_vision = 0
+    max_vision_path = []
     
     heap = [(-len(has_seen), start, [start], set())] # value(vision), node, path, list_seen
     
-    # visited.add(start)
+    visited.add(start)
     
-    max_vision = -len(has_seen)
-    max_vision_path = [start]
-
     while heap:
-        print(max_vision)
-        print(max_vision_path)
         value, node, path, list_seen = heapq.heappop(heap)
-
-        if node in visited:
-            continue
-
-        visited.add(node)
-
+        
         #update list_seen
         list_seen.update(observe(node, grid, size))
         
@@ -185,7 +175,7 @@ def Search(grid, start, size, has_seen):
         
         for new_x, new_y in neighbors8(node, size[0], size[1]):
             if (new_x, new_y) not in visited and grid[new_x][new_y] != WALL:
-                # visited.add((new_x, new_y))
+                visited.add((new_x, new_y))
                 new_value = len(list_seen) + cal_new_vision((new_x, new_y), grid, size, list_seen)
                 heapq.heappush(heap,( -new_value, (new_x, new_y), path + [(new_x, new_y)], list_seen))
         
@@ -252,36 +242,5 @@ def test1():
     value, path = Search(grid, (3,3), (7,7), observe((3,3), grid, size))
     print(value)
     print(path)
-
-def test2():
-    N, M, board, obstacle = readInputFile("map1_1.txt")
-    testBoard = bd.Board((N, M), board, obstacle)
-    testBoard.printBroad()
-    seekerVision = testBoard.seeker.vision(testBoard.grid)
-    print(testBoard.seeker.position)
-    value, path = Search_2(testBoard.grid, (testBoard.seeker.position[0], testBoard.seeker.position[1]), testBoard.size,
-                        observe((testBoard.seeker.position[0], testBoard.seeker.position[1]), testBoard.grid, testBoard.size), 2)
-    print(value)
-    print(path)
-
-    listAllVision = []
-    for point in path:
-        tmp = observe(point, board, (N, M))
-        for i in tmp:
-            listAllVision.append(i)
-
-    cnt = 0
-    # print(len(listAllVision))
-    for x in range(N):
-        for y in range(M):
-            if board[x][y] == WALL:
-                cnt+=1
-    print(cnt)
-
-    newGrid = testBoard.grid.copy()
-    for point in path:
-        newGrid[point[0]][point[1]] = 6
-    fe.createFrontEnd(newGrid, (N, M), listAllVision)
-    # fe.createFrontEnd(testBoard.grid, testBoard.size, seekerVision)
 
 test2()

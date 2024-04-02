@@ -155,7 +155,7 @@ class Algorithm:
                     
                     heapq.heappush(heap,(-new_value, new_cost, new_pos, new_path, list_seen))
 
-        return max_vision, max_vision_path
+        return max_vision_path
 
     def cal_heuristic(pos, grid, size, list_had_seen, list_priority):
         heuristic = 0
@@ -212,7 +212,7 @@ class Algorithm:
                     new_value = -value + Algorithm.cal_heuristic(new_pos, grid, size, list_seen, list_priority)
                     heapq.heappush(heap,(-new_value, new_cost, new_pos, new_path, list_seen))
 
-        return max_value, max_value_path
+        return max_value_path
 
     def cal_heuristic_diagonal(current, goal):
         dx = abs(current[0] - goal[0])
