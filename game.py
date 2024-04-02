@@ -2,6 +2,7 @@ import board as bd
 from Algorithm import Algorithm as algo
 import inputMap as im
 import Render as rd
+from time import sleep
 
 def test1():
     N, M, board, obstacle = im.readInputFile("map1_1.txt")
@@ -42,13 +43,14 @@ def test1():
             break
 
         # the Seeker looks around
-        listSeen.update(algo.observe(seeker.position, grid, size))
+        current_vision = algo.observe(seeker.position, grid, size) 
+        listSeen.update(current_vision)
 
         # New announce every 5 steps
         if i % 5 == 0 and i != 0:
             tmpList = []
             for index, hider in enumerate(hiders):
-                tmpList.append(hider.announce)
+                tmpList.append(hider.announce(grid))
                 print("announce")
             listAnnounce = tmpList.copy()
 
@@ -67,8 +69,8 @@ def test1():
         
         # if the seeker see the announce => look around the announce
         for a in listAnnounce:
-            if a in listSeen and flagToHider == False and flagAnnounce == False:
-                path = algo.Search_priority(seeker.position, grid, size, listSeen, 2, algo.find_list_priority(listAnnounce[i], grid, size))
+            if a in current_vision and flagToHider == False and flagAnnounce == False:
+                path = algo.Search_priority(seeker.position, grid, size, listSeen, 2, algo.find_list_priority(a, grid, size))
                 cnt = 1
                 flagAnnounce = True
                 flagPath = False
@@ -87,14 +89,13 @@ def test1():
             cnt+=1
             historyPath.append(seeker.position)
             # print(seeker.position)
-
+        if cnt >= len(path):
+            flagPath = False
         i+=1
-        
-        print(seeker.position)
-
+        print(seeker.position)     
     renderer = rd.Render(testBoard)
     renderer.renderPath(historyPath)	
 
             
-    
+
 test1()
