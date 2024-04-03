@@ -3,6 +3,14 @@ from Algorithm import Algorithm as algo
 import inputMap as im
 import Render as rd
 from time import sleep
+import Info
+import Render2 as rd2
+
+def createHidersPos(hiders):
+    newList = []
+    for hider in hiders:
+        newList.append(hider.position)
+    return newList
 
 def test1():
     N, M, board, obstacle = im.readInputFile("map1_1.txt")
@@ -22,28 +30,27 @@ def test1():
     listAnnounce = []
     path = []
     historyPath = []
-    
+
     flagToHider = False
     flagAnnounce = False
     flagPath = False
-    
 
-    
+    history = []
+
     while True:
-        
         # if seeker is on the same position as hider => remove hider from list
         for index, hider in enumerate(hiders):
             if seeker.position == hider.position:
                 del hiders[index]
                 del listAnnounce[index]
                 flagToHider = False
-                
+
         # no more hider => end
         if len(hiders) == 0:
             break
 
         # the Seeker looks around
-        current_vision = algo.observe(seeker.position, grid, size) 
+        current_vision = algo.observe(seeker.position, grid, size)
         listSeen.update(current_vision)
 
         # New announce every 5 steps
@@ -55,7 +62,7 @@ def test1():
             listAnnounce = tmpList.copy()
 
         # if the seeker see the hider => find the shortest path to the hider
-        
+
         for hider in hiders:
             if hider.position in listSeen and flagToHider == False:
                 path = algo.Search_shorted_path(seeker.position, hider.position, grid, size)
@@ -65,8 +72,7 @@ def test1():
                 flagAnnounce = False
                 print("path hider")
                 break
-            
-        
+
         # if the seeker see the announce => look around the announce
         for a in listAnnounce:
             if a in current_vision and flagToHider == False and flagAnnounce == False:
@@ -76,10 +82,10 @@ def test1():
                 flagPath = False
                 print("path announce")
                 break
-                
-        # initial path        
+
+        # initial path
         if flagPath == False and flagToHider == False and flagAnnounce == False:
-            path = algo.Search(seeker.position, grid, size, listSeen, 1)	
+            path = algo.Search(seeker.position, grid, size, listSeen, 1)
             cnt = 1
             flagPath = True
 
@@ -92,10 +98,17 @@ def test1():
         if cnt >= len(path):
             flagPath = False
         i+=1
-        print(seeker.position)     
-    renderer = rd.Render(testBoard)
-    renderer.renderPath(historyPath)	
+        # print("Seeker: ", seeker.position)
+        # print("Hiders: ", createHidersPos(hiders))
+        # print("List Announce:", listAnnounce)
+        history.append(Info.GameInfo(seeker.position, createHidersPos(hiders.copy()), listAnnounce.copy()))
 
-            
+    renderer = rd2.Render(testBoard)
+    renderer.render(history)
+    # for h in history:
+        # print(h.seeker)
+    # renderer.renderPath(historyPath)
+    # for h in history:
+    #     h.printInfo()
 
 test1()
