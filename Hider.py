@@ -53,7 +53,6 @@ class Hider(Agent):
                 if not (Agent.is_inside((new_x, new_y), size)):
                     break
                 if (grid[new_x][new_y] == Agent.WALL):
-                    print(new_x, new_y)
                     if (i == 0):
                         flag_v = True
                     del new_flatten[0][i+1:]

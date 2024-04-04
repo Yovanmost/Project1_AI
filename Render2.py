@@ -51,6 +51,9 @@ class Render:
         x1 = x0 + self.cell_size
         y1 = y0 + self.cell_size
         self.canvas.create_rectangle(x0, y0, x1, y1, fill=color, outline="black")
+        center_x = (x0 + x1) // 2
+        center_y = (y0 + y1) // 2
+        self.canvas.create_text(center_x, center_y, text=f"({row}, {column})", fill="black")
 
     def clearCanvas(self):
         self.canvas.delete("all")
@@ -100,7 +103,7 @@ class Render:
         create_button.pack()
         self.renderAll()
         self.updateSeekerPosition()
-        # self.root.mainloop()
+        self.root.mainloop()
 
     def updateSeekerPosition(self):
         self.clearCanvas()  # Clear canvas before rendering
