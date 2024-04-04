@@ -1,5 +1,5 @@
 import heapq
-from collections import deque
+import copy
 class Algorithm:
 
     WALL = 1
@@ -156,7 +156,7 @@ class Algorithm:
                     new_cost = cost + 1
                     new_path = path + [new_pos]
                     new_value = len(list_seen) + Algorithm.cal_new_vision(new_pos, grid, size, list_seen)
-                    heapq.heappush(heap,(-new_value, new_cost, new_pos, new_path, list_seen.copy()))
+                    heapq.heappush(heap,(-new_value, new_cost, new_pos, new_path, copy.deepcopy(list_seen)))
         
 
         return max_vision_path
@@ -214,7 +214,7 @@ class Algorithm:
                     new_cost = cost + 1
                     new_path = path + [new_pos]
                     new_value = -value + Algorithm.cal_heuristic(new_pos, grid, size, list_seen, list_priority)
-                    heapq.heappush(heap,(-new_value, new_cost, new_pos, new_path, list_seen.copy()))
+                    heapq.heappush(heap,(-new_value, new_cost, new_pos, new_path, copy.deepcopy(list_seen)))
 
         return max_value_path
 
@@ -243,7 +243,6 @@ class Algorithm:
             if current == goal:
                 return path
             
-            
             for new_cell in Algorithm.generate_neighbor(current, size):
                 if not Algorithm.is_inside(new_cell, size) or new_cell in visited or grid[new_cell[0]][new_cell[1]] == Algorithm.WALL:
                     continue
@@ -266,50 +265,58 @@ class Algorithm:
                 list.append((new_x, new_y))
         return list
     
-    def Search_2(start, grid, size, list_had_seen, visited_times):
-        visited = {}
-        max_vision = len(list_had_seen)
-        max_vision_path = [start]
-        min_steps = float("inf")
+    def make_priority_grid(grid, size): 
+        new_grid = grid
+        rows, cols = size
+        # clear map
+        for i in range(rows):
+            for j in range(cols):
+                if grid[i][j] != Algorithm.WALL:
+                    grid[i][j] = 0;
+        # make priority cell
+        for i in range(rows):
+            for j in range(cols):
+                if grid[i][j] == Algorithm.WALL:
+                    for new_x, new_y in Algorithm.generate_neighbor((i,j), size):
+                        if not Algorithm.is_inside((new_x, new_y), size) or grid[new_x][new_y] == Algorithm.WALL:
+                            continue
+                        grid[new_x][new_y] -= 1
+        return new_grid
+
+    def predict_move_hider(hider_pos, seeker_pos, priority_grid, size):        
+        current_dis = len(Algorithm.Search_shorted_path(hider_pos, seeker_pos, priority_grid, size))
+        # dis, priority, node
+        heap = [] 
         
-        # heap: (vision, cost, position, path, list_seen)
-        queue = deque([(-max_vision, 0, start, max_vision_path, list_had_seen)])
-
-        while queue:
-            value, cost, node, path, list_seen = queue.popleft()
-            
-            # check visited times
-            if node not in visited:
-                pass
-            elif visited[node] >= visited_times:
+        for new_hider_pos in Algorithm.generate_neighbor(hider_pos, size):
+            if priority_grid[new_hider_pos[0]][new_hider_pos[1]] == Algorithm.WALL:
                 continue
-            # update visited
-            visited[node] = visited.get(node, 0) + 1
-            # update list_seen
-            list_seen.update(Algorithm.observe(node, grid, size))
-            # update max_value, path, min cost
-            if not max_vision_path:
-                max_vision = -value
-                max_vision_path = path
-                min_steps = cost
-            elif -value > max_vision:
-                max_vision = -value
-                max_vision_path = path
-                min_steps = cost
-            elif -value == max_vision and cost < min_steps:
-                max_vision = -value
-                max_vision_path = path
-                min_steps = cost
-            
-            # generate neighbor
-            for new_pos in Algorithm.generate_neighbor(node, size):
-                if grid[new_pos[0]][new_pos[1]] == Algorithm.WALL:
-                    continue
-                if new_pos not in visited or visited[new_pos] < visited_times:
-                    # update new cost, path, value
-                    new_cost = cost + 1
-                    new_path = path + [new_pos]
-                    new_value = len(list_seen) + Algorithm.cal_new_vision(new_pos, grid, size, list_seen)
-                    queue.append((-new_value, new_cost, new_pos, new_path, list_seen.copy()))
+            new_dis = len(Algorithm.Search_shorted_path(new_hider_pos, seeker_pos, priority_grid, size))
+            if new_dis <= current_dis:
+                continue
+            heapq.heappush(heap, (-new_dis, -priority_grid[new_hider_pos[0]][new_hider_pos[1]], new_hider_pos))
 
-        return max_vision_path
+        result = []
+        while heap:
+            _, _, position = heapq.heappop(heap)
+            result.append(position)
+        return result
+    
+    def predict_move_seeker(seeker_pos, hider_pos, priority_grid, size):
+        current_dis = len(Algorithm.Search_shorted_path(seeker_pos, hider_pos, priority_grid, size))
+        
+        heap = []
+        for new_seeker_pos in Algorithm.generate_neighbor(seeker_pos, size):
+            if priority_grid[new_seeker_pos[0]][new_seeker_pos[1]] == Algorithm.WALL:
+                continue
+            new_dis = len(Algorithm.Search_shorted_path(new_seeker_pos, hider_pos, priority_grid, size))
+            if new_dis >= current_dis:
+                continue
+            priority = len(Algorithm.predict_move_hider(hider_pos, new_seeker_pos, priority_grid, size))
+            heapq.heappush(heap, (new_dis, priority, new_seeker_pos))
+        
+        result = []
+        while heap:
+            _, _, position = heapq.heappop(heap)
+            result.append(position)
+        return result
