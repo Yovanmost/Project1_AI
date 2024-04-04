@@ -283,12 +283,14 @@ class Algorithm:
                         grid[new_x][new_y] -= 1
         return new_grid
 
-    def predict_move_hider(hider_pos, seeker_pos, priority_grid, size):        
+    def predict_move_hider(hider_pos, seeker_pos, priority_grid, size, list_hider_pos):        
         current_dis = len(Algorithm.Search_shorted_path(hider_pos, seeker_pos, priority_grid, size))
         # dis, priority, node
         heap = [] 
         
         for new_hider_pos in Algorithm.generate_neighbor(hider_pos, size):
+            if new_hider_pos in list_hider_pos:
+                continue
             if priority_grid[new_hider_pos[0]][new_hider_pos[1]] == Algorithm.WALL:
                 continue
             new_dis = len(Algorithm.Search_shorted_path(new_hider_pos, seeker_pos, priority_grid, size))
@@ -302,7 +304,7 @@ class Algorithm:
             result.append(position)
         return result
     
-    def predict_move_seeker(seeker_pos, hider_pos, priority_grid, size):
+    def predict_move_seeker(seeker_pos, hider_pos, priority_grid, size, list_hider_pos):
         current_dis = len(Algorithm.Search_shorted_path(seeker_pos, hider_pos, priority_grid, size))
         
         heap = []
@@ -312,7 +314,7 @@ class Algorithm:
             new_dis = len(Algorithm.Search_shorted_path(new_seeker_pos, hider_pos, priority_grid, size))
             if new_dis >= current_dis:
                 continue
-            priority = len(Algorithm.predict_move_hider(hider_pos, new_seeker_pos, priority_grid, size))
+            priority = len(Algorithm.predict_move_hider(hider_pos, new_seeker_pos, priority_grid, size, list_hider_pos))
             heapq.heappush(heap, (new_dis, priority, new_seeker_pos))
         
         result = []
