@@ -1,14 +1,14 @@
 
 class GameInfo:
-    def init(self, seeker_position, hider_position, announcement_positions):
-        self.seeker_position = seeker_position
-        self.hider_position = hider_position
-        self.announcement_positions = announcement_positions
+    def __init__(self, seekerPos, hidersPos, announcePos):
+        self.seekerPos = seekerPos
+        self.hidersPos = hidersPos
+        self.announcePos = announcePos
 
-    def printInformationPos(self):
+    def printInfo(self):
         print ("Seeker Position:")
-        print(self.seeker_position)
+        print(self.seekerPos)
         print ("Hider Position:")
-        print(self.hider_position)
+        print(self.hidersPos)
         print ("Announcement Position:")
-        print(self.announcement_positions)
+        print(self.announcePos)

@@ -31,28 +31,27 @@ def test1():
     listAnnounce = []
     path = []
     historyPath = []
-    
+
     flagToHider = False
     flagAnnounce = False
     flagPath = False
-    
 
-    
+    history = []
+
     while True:
-        
         # if seeker is on the same position as hider => remove hider from list
         for index, hider in enumerate(hiders):
             if seeker.position == hider.position:
                 del hiders[index]
                 del listAnnounce[index]
                 flagToHider = False
-                
+
         # no more hider => end
         if len(hiders) == 0:
             break
 
         # the Seeker looks around
-        current_vision = algo.observe(seeker.position, grid, size) 
+        current_vision = algo.observe(seeker.position, grid, size)
         listSeen.update(current_vision)
 
         # New announce every 5 steps
@@ -73,8 +72,7 @@ def test1():
                 flagAnnounce = False
                 print("path hider")
                 break
-            
-        
+
         # if the seeker see the announce => look around the announce
         for a in listAnnounce:
             if a in current_vision and flagToHider == False and flagAnnounce == False:
@@ -84,10 +82,10 @@ def test1():
                 flagPath = False
                 print("path announce")
                 break
-                
-        # initial path        
+
+        # initial path
         if flagPath == False and flagToHider == False and flagAnnounce == False:
-            path = algo.Search(seeker.position, grid, size, listSeen, 1)	
+            path = algo.Search(seeker.position, grid, size, listSeen, 1)
             cnt = 1
             flagPath = True
 

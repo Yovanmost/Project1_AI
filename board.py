@@ -22,6 +22,7 @@ class Board:
         self.obstacles = obstacles # list of (upper left, bottom right) pos
         self.hider = self.findHider()
         self.seeker = self.findSeeker()
+        self.fillObstacle()
 
     # init hider
     def findHider(self):
@@ -43,6 +44,12 @@ class Board:
                     seekerPos = i, j
         seeker = Seeker(seekerPos)
         return seeker
+
+    def fillObstacle(self):
+        for obstacle in self.obstacles:
+            for x in range(obstacle[0], obstacle[2]+1):
+                for y in range(obstacle[1], obstacle[3]+1):
+                    self.grid[x][y] = WALL
 
     def isFound(self):
         # newest pos comparison
