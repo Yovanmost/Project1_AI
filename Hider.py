@@ -9,17 +9,18 @@ class Hider(Agent):
     def __init__(self, position):
         super().__init__(position)
         self.hidden = True
+        self.chased = False
 
     def reveal(self):
         self.hidden = False
 
     def vision(self, grid):
-        vision = set()  # Initialize the vision list
+        ls_vision = set()  # Initialize the vision list
         x, y = self.position
         size = (len(grid), len(grid[0]))
 
         if (grid[x][y] == Agent.WALL):
-            return list(vision)
+            return list(ls_vision)
 
         flatten = [
             [(-1,0), (-2,0)], # vertical
@@ -88,11 +89,17 @@ class Hider(Agent):
             if flag_d and flag_h:
                 del new_flatten[4][:]
 
+            ls_vision.add((x, y))
+
             for sublist in new_flatten:
                 for point in sublist:
-                    vision.add(point)
+                    new_x = point[0] + x
+                    new_y = point[1] + y
+                    if not Agent.is_inside((new_x, new_y), size) or grid[new_x][new_y] == Agent.WALL:
+                        continue
+                    ls_vision.add((new_x, new_y))
 
-        return list(vision)
+        return list(ls_vision)
 
     def announce(self, grid):
         x, y = self.position
