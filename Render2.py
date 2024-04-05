@@ -120,6 +120,12 @@ class Render:
         # self.updateSeekerPosition(history)
         self.root.mainloop()
 
+    def render(self):
+        create_button = tk.Button(self.root, text="End", command=self.root.destroy)
+        create_button.pack()
+        self.renderAll()
+        self.root.mainloop()
+
     # def updateSeekerPosition(self, history):
     #     self.clearCanvas()  # Clear canvas before rendering
     #     for h in history:

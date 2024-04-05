@@ -133,6 +133,7 @@ def test3():
         # if seeker is on the same position as hider => remove hider from list
         for index, hider in enumerate(hiders):
             if seeker.position == hider.position:
+                print("Caught: ", hider.position)
                 del hiders[index]
                 del listAnnounce[index]
                 flagChase = False
@@ -155,8 +156,8 @@ def test3():
 
         # if the hider see seeker and that hider is not being chased => move away from seeker
         for hider in hiders:
-            if hider.chased == True:
-                continue
+            # if hider.chased == True:
+            #     continue
             if seeker.position in hider.vision(grid):
                 hiderMove = algo.predict_move_hider(hider.position, seeker.position,
                                                     newGrid, size, createHidersPos(hiders))
@@ -173,23 +174,13 @@ def test3():
                 chasedHider = hider
                 listPathSeekerHider = []
                 path = []
-            elif flagChase == True and len(algo.Search_shorted_path(seeker.position, hider.position, grid, size)) < len(algo.Search_shorted_path(seeker.position, chasedHider.position, grid, size)):
-                flagChase = True
-                flagPath = False
-                flagAnnounce = False
-                chasedHider.chased = False
-                chasedHider = hider
-                chasedHider.chased = True
-                listPathSeekerHider = []
-                path = []
-                print("Debug: Change chased: ", chasedHider.position)
 
         # start chasing
         if flagChase == True:
-            hiderMove = algo.predict_move_hider(chasedHider.position, seeker.position,
-                                                 newGrid, size, createHidersPos(hiders))
-            if hiderMove:
-                chasedHider.position = hiderMove[0]
+            # hiderMove = algo.predict_move_hider(chasedHider.position, seeker.position,
+            #                                      newGrid, size, createHidersPos(hiders))
+            # if hiderMove:
+            #     chasedHider.position = hiderMove[0]
 
             seekerMove = algo.predict_move_seeker(seeker.position, chasedHider.position,
                                                    newGrid, size, createHidersPos(hiders))
@@ -197,7 +188,8 @@ def test3():
                 seeker.position = seekerMove[0]
 
             if is_loop(listPathSeekerHider, seeker.position, chasedHider.position):
-                print("In loop")
+                print("In loop: ")
+                print(listPathSeekerHider)
                 break
             print("Debug: List hider: ", createHidersPos(hiders))
             print("Debug: Seeker: ", seeker.position)
@@ -208,6 +200,9 @@ def test3():
         for a in listAnnounce:
             if a in current_vision and flagChase == False and flagAnnounce == False:
                 path = algo.Search_priority(seeker.position, grid, size, listSeen, 2, algo.find_list_priority(a, grid, size))
+                if len(path) == 1:
+                    listSeen = set()
+                    path = algo.Search_priority(seeker.position, grid, size, listSeen, 2, algo.find_list_priority(a, grid, size))
                 cnt = 1
                 flagAnnounce = True
                 flagPath = False
