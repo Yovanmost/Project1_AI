@@ -1,4 +1,3 @@
-
 class GameInfo:
     def __init__(self, seekerPos, hidersPos, announcePos):
         self.seekerPos = seekerPos

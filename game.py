@@ -5,6 +5,7 @@ import Render as rd
 import Render2 as rd2
 from time import sleep
 import copy
+import Info
 
 def createHidersPos(hiders):
     newList = []
@@ -123,6 +124,7 @@ def test3():
     listAnnounce = []
     path = []
     historyPath = []
+    history = []
 
     flagAnnounce = False
     flagPath = False
@@ -130,6 +132,10 @@ def test3():
     newGrid = algo.make_priority_grid(copy.deepcopy(grid), size)
 
     while True:
+        history.append(Info.GameInfo(seeker.position, createHidersPos(hiders.copy()), listAnnounce.copy()))
+        print("Seeker: ", seeker.position)
+        print("Hiders list: ", createHidersPos(hiders))
+        print("Announce list: ", listAnnounce)
         # if seeker is on the same position as hider => remove hider from list
         for index, hider in enumerate(hiders):
             if seeker.position == hider.position:
@@ -228,8 +234,8 @@ def test3():
         if cnt >= len(path):
             flagPath = False
         i+=1
-        print("Seeker: ", seeker.position)
-    renderer = rd2.Render(testBoard)
+
+    renderer = rd2.Render(testBoard, history)
     renderer.render()
     # renderer.renderPath(historyPath)
 
