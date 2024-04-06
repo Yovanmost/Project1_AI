@@ -40,6 +40,10 @@ def test1():
     history = []
 
     while True:
+        history.append(Info.GameInfo(seeker.position, createHidersPos(hiders.copy()), listAnnounce.copy()))
+        print("Seeker: ", seeker.position)
+        print("Hiders list: ", createHidersPos(hiders))
+        print("Announce list: ", listAnnounce)
         # if seeker is on the same position as hider => remove hider from list
         for index, hider in enumerate(hiders):
             if seeker.position == hider.position:
@@ -99,9 +103,9 @@ def test1():
         if cnt >= len(path):
             flagPath = False
         i+=1
-        print(seeker.position)     
-    renderer = rd.Render(testBoard)
-    renderer.renderPath(historyPath)	
+
+    renderer = rd2.Render(testBoard, history)
+    renderer.render()
 
 def is_loop(listPathSeekerHider, currSeekerPos, currHiderPos):
     return (currSeekerPos, currHiderPos) in listPathSeekerHider
@@ -247,4 +251,4 @@ def test4():
     testBoard.grid = algo.make_priority_grid(testBoard.grid, (N, M))
     testBoard.printBroad()
 
-test3()
+test1()
