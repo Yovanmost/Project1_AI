@@ -15,7 +15,6 @@ class Solve:
         self.testBoard = bd.Board((N, M), board, obstacle)
         time = 10000
         self.listSeen = set()
-        # while cntHider > 0:
         self.seeker = self.testBoard.seeker
         self.hiders = self.testBoard.hider.copy()
         self.grid = self.testBoard.grid.copy()
@@ -24,6 +23,7 @@ class Solve:
         self.step = 0
         self.listAnnounce = []
         self.path = []
+        self.cnt = 0
 
         self.flagToHider = False
         self.flagAnnounce = False
