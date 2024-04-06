@@ -5,6 +5,9 @@ import frontend as fe
 import board as bd
 from inputMap import readInputFile
 import Render as rd
+import Solve
+
+FILE_NAME = "mapVer4.txt"
 
 def test1():
     size = 7, 7
@@ -56,4 +59,9 @@ def test3():
     frontEnd = rd.Render(testBoard)
     frontEnd.render()
 
-test3()
+def testFinal():
+    game = Solve.Solve(FILE_NAME)
+    # game.playLevel1and2()
+    game.playLevel3()
+
+testFinal()

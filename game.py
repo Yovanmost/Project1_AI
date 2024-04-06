@@ -6,6 +6,9 @@ import Render2 as rd2
 from time import sleep
 import copy
 import Info
+import Solve
+
+FILE_MAP = "mapVerSpecial.txt"
 
 def createHidersPos(hiders):
     newList = []
@@ -15,10 +18,9 @@ def createHidersPos(hiders):
 
 
 def test1():
-    N, M, board, obstacle = im.readInputFile("map1_1.txt")
+    N, M, board, obstacle = im.readInputFile(FILE_MAP)
     testBoard = bd.Board((N, M), board, obstacle)
     time = 10000
-    cntHider = len(testBoard.hider)
     listSeen = set()
     # while cntHider > 0:
     seeker = testBoard.seeker
@@ -27,17 +29,17 @@ def test1():
     testBoard.printBroad()
     print()
     size = (N, M)
-    list = []
     i = 0
     listAnnounce = []
     path = []
-    historyPath = []
 
     flagToHider = False
     flagAnnounce = False
     flagPath = False
 
     history = []
+
+    # "This code is not clean" - Minh Dang
 
     while True:
         history.append(Info.GameInfo(seeker.position, createHidersPos(hiders.copy()), listAnnounce.copy()))
@@ -98,7 +100,6 @@ def test1():
         if cnt < len(path):
             seeker.position = path[cnt]
             cnt+=1
-            historyPath.append(seeker.position)
             # print(seeker.position)
         if cnt >= len(path):
             flagPath = False
@@ -111,7 +112,7 @@ def is_loop(listPathSeekerHider, currSeekerPos, currHiderPos):
     return (currSeekerPos, currHiderPos) in listPathSeekerHider
 
 def test3():
-    N, M, board, obstacle = im.readInputFile("map1_1.txt")
+    N, M, board, obstacle = im.readInputFile(FILE_MAP)
     testBoard = bd.Board((N, M), board, obstacle)
     time = 10000
     cntHider = len(testBoard.hider)
@@ -137,9 +138,12 @@ def test3():
 
     while True:
         history.append(Info.GameInfo(seeker.position, createHidersPos(hiders.copy()), listAnnounce.copy()))
+        print(i)
         print("Seeker: ", seeker.position)
         print("Hiders list: ", createHidersPos(hiders))
         print("Announce list: ", listAnnounce)
+        print("Path: ", path)
+        print()
         # if seeker is on the same position as hider => remove hider from list
         for index, hider in enumerate(hiders):
             if seeker.position == hider.position:
@@ -165,7 +169,7 @@ def test3():
                 print("announce")
             listAnnounce = tmpList.copy()
 
-        # if the hider see seeker and that hider is not being chased => move away from seeker
+        # if the hider see seeker => move away from seeker
         for hider in hiders:
             # if hider.chased == True:
             #     continue
@@ -178,6 +182,7 @@ def test3():
         # find the first hider to chase
         for hider in hiders:
             if flagChase == False and hider.chased == False and hider.position in seeker.vision(grid):
+                print("Find chase")
                 flagChase = True
                 flagPath = False
                 flagAnnounce = False
@@ -188,6 +193,7 @@ def test3():
 
         # start chasing
         if flagChase == True:
+            print("Chased")
             # hiderMove = algo.predict_move_hider(chasedHider.position, seeker.position,
             #                                      newGrid, size, createHidersPos(hiders))
             # if hiderMove:
@@ -201,6 +207,8 @@ def test3():
             if is_loop(listPathSeekerHider, seeker.position, chasedHider.position):
                 print("In loop: ")
                 print(listPathSeekerHider)
+                print("Loop Seeker: ", seeker.position, " Hider: ", chasedHider.position)
+
                 break
             print("Debug: List hider: ", createHidersPos(hiders))
             print("Debug: Seeker: ", seeker.position)
@@ -238,6 +246,7 @@ def test3():
             # print(seeker.position)
         if cnt >= len(path):
             flagPath = False
+            flagAnnounce = False
         i+=1
 
     renderer = rd2.Render(testBoard, history)
@@ -246,9 +255,11 @@ def test3():
 
 
 def test4():
-    N, M, board, obstacle = im.readInputFile("map1_1.txt")
+    N, M, board, obstacle = im.readInputFile(FILE_MAP)
     testBoard = bd.Board((N, M), board, obstacle)
-    testBoard.grid = algo.make_priority_grid(testBoard.grid, (N, M))
-    testBoard.printBroad()
+    # testBoard.grid = algo.make_priority_grid(testBoard.grid, (N, M))
+    # testBoard.printBroad()
+    renderer = rd2.Render(testBoard, [])
+    renderer.render()
 
 test1()
