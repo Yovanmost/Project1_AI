@@ -171,7 +171,7 @@ def move_hider(map, hider_position, seeker_position):
         return hider_position  # Không tìm thấy đường đi, Hider giữ nguyên vị trí
 
 def main():
-    map_size = 40  # Kích thước mặc định
+    map_size = 23  # Kích thước mặc định
     map = tao_map(map_size)
     them_agent(map, map_size, 'SEEKER')
     them_agent(map, map_size, 'HIDER')

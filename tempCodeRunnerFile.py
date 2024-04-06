@@ -1,2 +1,2 @@
 
-    root.mainloop()
+    for i in range(n
