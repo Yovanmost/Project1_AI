@@ -66,7 +66,7 @@ class Render:
         self.canvas.create_rectangle(x0, y0, x1, y1, fill=color, outline="black")
         center_x = (x0 + x1) // 2
         center_y = (y0 + y1) // 2
-        self.canvas.create_text(center_x, center_y, text=f"({row}, {column})", fill="black")
+        # self.canvas.create_text(center_x, center_y, text=f"({row}, {column})", fill="black")
 
     def clearCanvas(self):
         self.canvas.delete("all")
