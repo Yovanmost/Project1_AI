@@ -105,9 +105,9 @@ def save_map_to_file(map, map_size_n, map_size_m, filename):
 
 def main():
     map_size_n = 20  # Số hàng mặc định
-    map_size_m = 30  # Số cột mặc định
+    map_size_m = 36  # Số cột mặc định
     map = create_map(map_size_n, map_size_m)
-    save_map_to_file(map, map_size_n, map_size_m, "mapVer7.txt")
+    save_map_to_file(map, map_size_n, map_size_m, "mapVer10.txt")
 
 if __name__ == "__main__":
     main()

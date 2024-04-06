@@ -16,8 +16,8 @@ SEEKER_COLOR = 'blue'
 OBS_COLOR = 'yellow'
 
 # Button
-BUTTON_HEIGHT = 1
-BUTTON_WIDTH = 2
+BUTTON_HEIGHT = 2
+BUTTON_WIDTH = 4
 
 
 # Render Map Editor App
@@ -88,7 +88,7 @@ def read_map_from_file(filename):
     return map_data, map_size_n, map_size_m
 
 def main():
-    filename = "mapVer7.txt"
+    filename = "mapVer10.txt"
     map_data, map_size_n, map_size_m = read_map_from_file(filename)
 
     root = tk.Tk()
