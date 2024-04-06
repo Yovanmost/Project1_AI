@@ -6,8 +6,9 @@ import board as bd
 from inputMap import readInputFile
 import Render as rd
 import Solve
+import menu as Menu
 
-FILE_NAME = "mapVer7.txt"
+#FILE_NAME = "mapVer7.txt"
 
 def test1():
     size = 7, 7
@@ -60,8 +61,13 @@ def test3():
     frontEnd.render()
 
 def testFinal():
+    level, FILE_NAME = Menu.start_game()
+    FILE_NAME = "Map/" + FILE_NAME
     game = Solve.Solve(FILE_NAME)
     # game.playLevel1and2()
-    game.playLevel3()
+    if level == '1'or level == '2':
+        game.playLevel1and2()
+    else:
+        game.playLevel3()
 
 testFinal()
