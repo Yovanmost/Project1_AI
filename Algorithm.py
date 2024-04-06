@@ -266,21 +266,45 @@ class Algorithm:
         return list
     
     def make_priority_grid(grid, size): 
-        new_grid = grid
+        new_grid = grid.copy()
         rows, cols = size
         # clear map
         for i in range(rows):
             for j in range(cols):
-                if grid[i][j] != Algorithm.WALL:
-                    grid[i][j] = 0;
+                if new_grid[i][j] != Algorithm.WALL:
+                    new_grid[i][j] = 0
         # make priority cell
         for i in range(rows):
             for j in range(cols):
-                if grid[i][j] == Algorithm.WALL:
+                if new_grid[i][j] == Algorithm.WALL:
                     for new_x, new_y in Algorithm.generate_neighbor((i,j), size):
-                        if not Algorithm.is_inside((new_x, new_y), size) or grid[new_x][new_y] == Algorithm.WALL:
+                        if not Algorithm.is_inside((new_x, new_y), size) or new_grid[new_x][new_y] == Algorithm.WALL:
                             continue
-                        grid[new_x][new_y] -= 1
+                        new_grid[new_x][new_y] -= 1
+
+        for i in range(rows):
+            if new_grid[i][0] != Algorithm.WALL:
+                new_grid[i][0] -= 3
+            if new_grid[i][cols-1] != Algorithm.WALL:
+                new_grid[i][cols-1] -= 3
+
+        for i in range(cols):
+            if new_grid[0][i] != Algorithm.WALL:
+                new_grid[0][i] -= 3
+            if new_grid[rows-1][i] != Algorithm.WALL:
+                new_grid[rows-1][i] -= 3
+
+        new_grid[0][0] += 1
+        new_grid[0][cols-1] += 1
+        new_grid[rows-1][0] +=1
+        new_grid[rows-1][cols-1] +=1
+
+        # for i in range(rows):
+        #     for j in range(cols):
+        #         if new_grid[i][j] != Algorithm.WALL:
+        #             for new_pos in Algorithm.generate_neighbor((i, j), size):
+        #                 if new_grid[new_pos[0]][new_pos[1]] == Algorithm.WALL or not Algorithm.is_inside(new_pos, size):
+        #                     new_grid[i][j] -= 1
         return new_grid
 
     def predict_move_hider(hider_pos, seeker_pos, priority_grid, size, list_hider_pos):        

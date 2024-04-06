@@ -140,6 +140,7 @@ def test3():
         for index, hider in enumerate(hiders):
             if seeker.position == hider.position:
                 print("Caught: ", hider.position)
+                listSeen = set()
                 del hiders[index]
                 del listAnnounce[index]
                 flagChase = False
@@ -239,4 +240,11 @@ def test3():
     renderer.render()
     # renderer.renderPath(historyPath)
 
-test3()
+
+def test4():
+    N, M, board, obstacle = im.readInputFile("map1_1.txt")
+    testBoard = bd.Board((N, M), board, obstacle)
+    testBoard.grid = algo.make_priority_grid(testBoard.grid, (N, M))
+    testBoard.printBroad()
+
+test4()

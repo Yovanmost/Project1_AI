@@ -149,7 +149,7 @@ class Render:
             self.setNewHiders(state.hidersPos)
             self.setNewAnnounce(state.announcePos)
             self.renderAll()
-            self.root.after(1000, self.updateSeekerPosition, index + 1)
+            self.root.after(500, self.updateSeekerPosition, index + 1)
             self.update_index = index
 
     def render(self):
