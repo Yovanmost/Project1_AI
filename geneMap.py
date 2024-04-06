@@ -22,7 +22,7 @@ def create_map(n, m):
         map: Ma trận 2 chiều chứa bản đồ trò chơi
     """
     # Khởi tạo map
-    map = [[WALL for _ in range(m)] for _ in range(n)]
+    map = [[PATH for _ in range(m)] for _ in range(n)]
 
     # Tạo đường đi
     for i in range(1, n):
@@ -105,7 +105,7 @@ def save_map_to_file(map, map_size_n, map_size_m, filename):
 
 def main():
     map_size_n = 20  # Số hàng mặc định
-    map_size_m = 60  # Số cột mặc định
+    map_size_m = 30  # Số cột mặc định
     map = create_map(map_size_n, map_size_m)
     save_map_to_file(map, map_size_n, map_size_m, "mapVer7.txt")
 

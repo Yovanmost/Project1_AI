@@ -1,22 +1,26 @@
 import tkinter as tk
 from tkinter import messagebox
 
+# Define
 PATH = 0
 WALL = 1
 HIDER = 2
 SEEKER = 3
-
 OBS = 4 # obstacle
+
+# Color
 PATH_COLOR = 'white'
 WALL_COLOR = 'black'
 HIDER_COLOR = 'green'
 SEEKER_COLOR = 'blue'
 OBS_COLOR = 'yellow'
 
+# Button
 BUTTON_HEIGHT = 1
 BUTTON_WIDTH = 2
 
 
+# Render Map Editor App
 class MapEditorApp:
     def __init__(self, root, map_data, map_size_n, map_size_m, filename):
         self.root = root
@@ -59,6 +63,10 @@ class MapEditorApp:
                     bg_color = PATH_COLOR
                 else:
                     bg_color = WALL_COLOR
+
+                
+
+                
                 self.buttons[i][j].configure(text=cell_text, bg=bg_color)
 
     def save_map(self):
