@@ -294,10 +294,14 @@ class Algorithm:
             if new_grid[rows-1][i] != Algorithm.WALL:
                 new_grid[rows-1][i] -= 3
 
-        new_grid[0][0] += 1
-        new_grid[0][cols-1] += 1
-        new_grid[rows-1][0] +=1
-        new_grid[rows-1][cols-1] +=1
+        if new_grid[0][0] != Algorithm.WALL:
+            new_grid[0][0] += 1
+        if new_grid[0][cols-1] != Algorithm.WALL:
+            new_grid[0][cols-1] += 1
+        if new_grid[rows-1][0] != Algorithm.WALL:
+            new_grid[rows-1][0] +=1
+        if new_grid[rows-1][cols-1] != Algorithm.WALL:
+            new_grid[rows-1][cols-1] +=1
 
         # for i in range(rows):
         #     for j in range(cols):

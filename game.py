@@ -247,4 +247,4 @@ def test4():
     testBoard.grid = algo.make_priority_grid(testBoard.grid, (N, M))
     testBoard.printBroad()
 
-test4()
+test3()
