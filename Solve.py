@@ -170,6 +170,7 @@ class Solve:
             # if the hider see seeker => move away from seeker
             for hider in self.hiders:
                 self.moveHider(hider)
+            self.history.append(Info.GameInfo(self.seeker.position, self.createHidersPos(), self.listAnnounce.copy()))
 
             # find the first hider to chase
             for hider in self.hiders:

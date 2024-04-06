@@ -7,7 +7,7 @@ from inputMap import readInputFile
 import Render as rd
 import Solve
 
-FILE_NAME = "mapVer4.txt"
+FILE_NAME = "mapVer7.txt"
 
 def test1():
     size = 7, 7
