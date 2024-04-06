@@ -1,18 +1,21 @@
 import tkinter as tk
 from tkinter import messagebox
 
-WALL = 1
 PATH = 0
-OBS = 4
-PATH_COLOR = 'white'
-WALL_COLOR = 'black'
-OBS_COLOR = 'yellow'
-HIDER_COLOR = 'green'
-SEEKER_COLOR = 'blue'
+WALL = 1
 HIDER = 2
 SEEKER = 3
-BUTTON_WIDTH = 2
+
+OBS = 4 # obstacle
+PATH_COLOR = 'white'
+WALL_COLOR = 'black'
+HIDER_COLOR = 'green'
+SEEKER_COLOR = 'blue'
+OBS_COLOR = 'yellow'
+
 BUTTON_HEIGHT = 1
+BUTTON_WIDTH = 2
+
 
 class MapEditorApp:
     def __init__(self, root, map_data, map_size_n, map_size_m, filename):
@@ -77,7 +80,7 @@ def read_map_from_file(filename):
     return map_data, map_size_n, map_size_m
 
 def main():
-    filename = "mapVer5.txt"
+    filename = "mapVer7.txt"
     map_data, map_size_n, map_size_m = read_map_from_file(filename)
 
     root = tk.Tk()
