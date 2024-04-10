@@ -1,6 +1,5 @@
 
 class Agent:
-    # WALL
     WALL = 1
 
     # Direction
@@ -31,6 +30,9 @@ class Agent:
         dx, dy = directions[direction]
         self.position[0] += dx
         self.position[1] += dy
+        
+    def move_2(self, new_pos):
+        self.position = new_pos
 
     def vision(self, grid):
         pass
